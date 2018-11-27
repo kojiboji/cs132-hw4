@@ -1,8 +1,11 @@
 import cs132.util.ProblemException;
 import cs132.vapor.ast.VDataSegment;
+import cs132.vapor.ast.VFunction;
+import cs132.vapor.ast.VInstr;
 import cs132.vapor.parser.VaporParser;
 import cs132.vapor.ast.VaporProgram;
 import cs132.vapor.ast.VBuiltIn.Op;
+import visitors.VisitorLiveness;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -23,7 +26,15 @@ public class V2VM {
             e.printStackTrace();
         }
 
-        
+        VisitorLiveness visitorLiveness = new VisitorLiveness();
+
+        for(VFunction function: program.functions){
+            System.out.println("index:"+function.body);
+            for(VInstr instr: function.body){
+                visitorLiveness.reset();
+                instr.accept(visitorLiveness);
+            }
+        }
 
 
     }
