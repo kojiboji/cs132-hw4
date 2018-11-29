@@ -29,11 +29,12 @@ public class V2VM {
         VisitorLiveness visitorLiveness = new VisitorLiveness();
 
         for(VFunction function: program.functions){
-            System.out.println("index:"+function.body);
+            System.out.println("index:"+function.index);
+            visitorLiveness.reInit(function.body.length);
             for(VInstr instr: function.body){
-                visitorLiveness.reset();
                 instr.accept(visitorLiveness);
             }
+            visitorLiveness.print();
         }
 
 
