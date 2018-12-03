@@ -202,15 +202,7 @@ public class VisitorV2VM extends VInstr.Visitor<V2VMException> {
     @Override
     public void visit(VMemRead vMemRead) throws V2VMException {
 
-        String dest  = vMemRead.dest.toString();
-        if(vMemRead.dest instanceof VVarRef){
-            if(localLiveness.spilled(dest)){
-                System.out.printf("\t$v0 = %s{%s}\n", localLiveness.conversion(dest), dest);
-                dest = String.format("$v0{%s}", dest);
-            }
-            else
-                dest = String.format("%s{%s}", localLiveness.conversion(dest), dest);
-        }
+
 
 
         String base = ((VMemRef.Global)vMemRead.source).base.toString();
@@ -223,7 +215,16 @@ public class VisitorV2VM extends VInstr.Visitor<V2VMException> {
                 base = String.format("%s{%s}", localLiveness.conversion(base), base);
         }
 
-        System.out.printf("\t%s = [%s + %d]\n", dest, base, ((VMemRef.Global) vMemRead.source).byteOffset);
+        String dest  = vMemRead.dest.toString();
+        if(localLiveness.spilled(dest)){
+            System.out.printf("\t$v0 = [%s + %d]\n", base, ((VMemRef.Global) vMemRead.source).byteOffset);
+            System.out.printf("\t%s{%s} = $v0\n", localLiveness.conversion(dest), dest);
+        }
+        else {
+            dest = String.format("%s{%s}", localLiveness.conversion(dest), dest);
+            System.out.printf("\t%s = [%s + %d]\n", dest, base, ((VMemRef.Global) vMemRead.source).byteOffset);
+        }
+
 
     }
 
@@ -255,6 +256,8 @@ public class VisitorV2VM extends VInstr.Visitor<V2VMException> {
             if (vReturn.value instanceof VVarRef) {
                 System.out.printf("\t$v0 = %s{%s}\n", localLiveness.conversion(value), value);
             }
+            else
+                System.out.printf("\t$v0 = %s\n", value);
             restoreCalleeSaved();
             System.out.printf("\tret\n");
         }

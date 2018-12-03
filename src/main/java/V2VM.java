@@ -25,7 +25,7 @@ public class V2VM {
         }
 
         for(VDataSegment vDataSegment: program.dataSegments){
-            System.out.println(vDataSegment.ident+":");
+            System.out.println("const "+vDataSegment.ident);
             for(VOperand.Static value:vDataSegment.values){
                 System.out.printf("\t%s\n",value.toString());
             }
