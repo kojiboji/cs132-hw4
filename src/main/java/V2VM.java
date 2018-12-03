@@ -30,6 +30,7 @@ public class V2VM {
                 System.out.printf("\t%s\n",value.toString());
             }
         }
+        System.out.println();
 
         VisitorLiveness[] livenessVisitors = new VisitorLiveness[program.functions.length];
 

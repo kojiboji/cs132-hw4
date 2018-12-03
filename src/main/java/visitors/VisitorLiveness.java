@@ -23,6 +23,18 @@ public class VisitorLiveness extends VInstr.Visitor<V2VMException> {
     private int nLocal;
     private int nOut;
 
+    public int getnIn() {
+        return nIn < 0 ? 0 : nIn;
+    }
+
+    public int getnLocal() {
+        return nLocal;
+    }
+
+    public int getnOut() {
+        return nOut;
+    }
+
     private int nCallee;
     private int nCaller;
 
@@ -117,6 +129,10 @@ public class VisitorLiveness extends VInstr.Visitor<V2VMException> {
 
     public List<String> getCalleeRegsUsed(){
         return new ArrayList<>(calleeRegsUsed);
+    }
+
+    public List<String> getCallerRegsUsed(){
+        return new ArrayList<>(callerRegsUsed);
     }
 
     public boolean spilled(String varRef){
@@ -235,7 +251,7 @@ public class VisitorLiveness extends VInstr.Visitor<V2VMException> {
 
 
         PriorityQueue<String> registers = new PriorityQueue<>(Arrays.asList(
-                "$s0"
+
         ));
 
 
